@@ -21,7 +21,6 @@ public class AppInitializer extends Application {
         AnchorPane root = fxmlLoader.load();
         primaryStage.setScene(new Scene(root));
         primaryStage.setMaximized(true);
-        primaryStage.setResizable(false);
         primaryStage.setTitle("Manage Students");
         primaryStage.show();
         primaryStage.centerOnScreen();

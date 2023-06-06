@@ -3,10 +3,12 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -14,9 +16,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="810.0" prefWidth="1440.0" stylesheets="@../styles/ManageStudentViewStyles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.dep10.app.controller.ManageStudentViewController">
+<AnchorPane prefHeight="900.0" prefWidth="1440.0" stylesheets="@../styles/ManageStudentViewStyles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.dep10.app.controller.ManageStudentViewController">
    <children>
-      <SplitPane dividerPositions="0.46899152448935105" layoutX="365.0" layoutY="97.0" prefHeight="374.0" prefWidth="441.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane dividerPositions="0.34556150132889274" layoutX="365.0" layoutY="97.0" prefHeight="374.0" prefWidth="441.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
@@ -35,26 +37,60 @@
                               <Font size="18.0" />
                            </font>
                         </Button>
-                        <Label text="Student ID">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Label>
-                        <TextField fx:id="txtId" editable="false">
+                        <TextField fx:id="txtId" editable="false" promptText="Student ID">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </TextField>
-                        <Label text="Student Name">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Label>
-                        <TextField fx:id="txtName">
+                        <TextField fx:id="txtName" promptText="Student Name">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </TextField>
+                        <TextField fx:id="txtAddress" layoutX="10.0" layoutY="288.0" promptText="Student Address">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </TextField>
+                        <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="10.0">
+                           <children>
+                              <Label fx:id="lblGender" alignment="CENTER_RIGHT" prefHeight="20.0" prefWidth="110.0" text="Gender : ">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                              <RadioButton fx:id="rdoMale" mnemonicParsing="false" onAction="#rdoGentOnAction" text="Male">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="set" />
+                                 </toggleGroup>
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </RadioButton>
+                              <RadioButton fx:id="rdoFemale" mnemonicParsing="false" onAction="#rdoGentOnAction" text="FeMale" toggleGroup="$set">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </RadioButton>
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="24.0" prefWidth="666.0" spacing="10.0">
+                           <children>
+                              <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="20.0" prefWidth="141.0" text="Contact : ">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets top="6.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="txtContact" prefHeight="24.0" prefWidth="388.0" promptText="Eg :xxx-xxxxxxx" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </TextField>
+                           </children>
+                        </HBox>
                         <Label layoutX="10.0" layoutY="82.0" text="Picture">
                            <font>
                               <Font size="16.0" />
@@ -62,12 +98,12 @@
                         </Label>
                         <HBox>
                            <children>
-                              <AnchorPane prefHeight="150.0" prefWidth="150.0" style="-fx-border-color: grey;">
+                              <AnchorPane prefHeight="214.0" prefWidth="200.0" style="-fx-border-color: grey;">
                                  <HBox.margin>
                                     <Insets left="30.0" />
                                  </HBox.margin>
                                  <children>
-                                    <ImageView fx:id="imgStudent" fitHeight="360.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="1.0774066582895898" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
+                                    <ImageView fx:id="imgStudent" fitHeight="240.0" fitWidth="200.0" layoutX="5.0" pickOnBounds="true" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
                                        <image>
                                           <Image url="@../image/No-photo.jpg" />
                                        </image>
@@ -137,9 +173,12 @@
                         </HBox>
                         <TableView fx:id="tblStudent" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onKeyReleased="#tblStudentOnKeyReleased" prefHeight="472.0" prefWidth="488.0" VBox.vgrow="ALWAYS">
                           <columns>
-                            <TableColumn prefWidth="325.38507556915283" text="Picture" />
-                            <TableColumn prefWidth="160.76953125" text="ID" />
-                              <TableColumn prefWidth="256.1542053222656" text="Name" />
+                            <TableColumn prefWidth="159.23098278045654" text="Picture" />
+                            <TableColumn prefWidth="107.69245910644531" text="ID" />
+                              <TableColumn prefWidth="214.61572265625" text="Name" />
+                              <TableColumn prefWidth="190.0003662109375" text="Address" />
+                              <TableColumn prefWidth="103.8463134765625" text="Gender" />
+                              <TableColumn prefWidth="145.385009765625" text="Contact" />
                           </columns>
                         </TableView>
                      </children>

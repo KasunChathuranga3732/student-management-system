@@ -1,72 +1,66 @@
 package lk.ijse.dep10.app.controller;
 
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 
 public class ManageStudentViewController {
 
-    @FXML
-    private Button btnBrowse;
+    public Button btnBrowse;
+    public Button btnClear;
+    public Button btnDelete;
+    public Button btnNewStudent;
+    public Button btnSave;
+    public ImageView imgStudent;
+    public Label lblGender;
+    public RadioButton rdoFemale;
+    public RadioButton rdoMale;
+    public ToggleGroup set;
+    public TableView<?> tblStudent;
+    public TextField txtAddress;
+    public TextField txtContact;
+    public TextField txtId;
+    public TextField txtName;
+    public TextField txtSearchStudent;
 
-    @FXML
-    private Button btnClear;
-
-    @FXML
-    private Button btnDelete;
-
-    @FXML
-    private Button btnNewStudent;
-
-    @FXML
-    private Button btnSave;
-
-    @FXML
-    private ImageView imgStudent;
-
-    @FXML
-    private TableView<?> tblStudent;
-
-    @FXML
-    private TextField txtId;
-
-    @FXML
-    private TextField txtName;
-
-    @FXML
-    private TextField txtSearchStudent;
-
-    @FXML
-    void btnBrowseOnAction(ActionEvent event) {
+    
+    public void btnBrowseOnAction(ActionEvent event) {
 
     }
 
-    @FXML
-    void btnClearOnAction(ActionEvent event) {
+    
+    public void btnClearOnAction(ActionEvent event) {
 
     }
 
-    @FXML
-    void btnDeleteOnAction(ActionEvent event) {
+    
+    public void btnDeleteOnAction(ActionEvent event) {
 
     }
 
-    @FXML
-    void btnNewStudentOnAction(ActionEvent event) {
+    
+    public void btnNewStudentOnAction(ActionEvent event) {
 
     }
 
-    @FXML
-    void btnSaveOnAction(ActionEvent event) {
+    
+    public void btnSaveOnAction(ActionEvent event) {
 
     }
 
-    @FXML
-    void tblStudentOnKeyReleased(KeyEvent event) {
+    
+    public void rdoGentOnAction(ActionEvent event) {
+
+    }
+
+    
+    public void tblStudentOnKeyReleased(KeyEvent event) {
 
     }
 
