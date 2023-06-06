@@ -1,0 +1,18 @@
+
+.text-field {
+    -fx-background-color: white;
+    -fx-border-color: lightgray;
+}
+
+.text-field:focused {
+    -fx-border-color: #019de0;
+}
+
+.invalid {
+    -fx-border-color: red !important;
+    -fx-text-fill: #000000;
+}
+
+.text-field.invalid:focused {
+    -fx-border-color: red;
+}
