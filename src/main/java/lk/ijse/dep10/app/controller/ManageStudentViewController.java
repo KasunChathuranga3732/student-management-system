@@ -1,14 +1,24 @@
 package lk.ijse.dep10.app.controller;
 
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import lk.ijse.dep10.app.db.DBConnection;
+import lk.ijse.dep10.app.model.Student;
+import lk.ijse.dep10.app.util.Gender;
+
+import javax.imageio.ImageIO;
+import javax.sql.rowset.serial.SerialBlob;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.sql.*;
 
 public class ManageStudentViewController {
 
@@ -22,14 +32,73 @@ public class ManageStudentViewController {
     public RadioButton rdoFemale;
     public RadioButton rdoMale;
     public ToggleGroup set;
-    public TableView<?> tblStudent;
+    public TableView<Student> tblStudent;
     public TextField txtAddress;
     public TextField txtContact;
     public TextField txtId;
     public TextField txtName;
     public TextField txtSearchStudent;
 
-    
+
+    public void initialize(){
+        tblStudent.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("studentPicture"));
+        tblStudent.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("id"));
+        tblStudent.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("name"));
+        tblStudent.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("address"));
+        tblStudent.getColumns().get(4).setCellValueFactory(new PropertyValueFactory<>("contact"));
+        tblStudent.getColumns().get(5).setCellValueFactory(new PropertyValueFactory<>("gender"));
+
+
+
+        loadAllStudents();
+
+    }
+
+    private void loadAllStudents() {
+        Connection connection = DBConnection.getInstance().getConnection();
+        try {
+            Statement stm = connection.createStatement();
+            ResultSet rst = stm.executeQuery("SELECT * FROM Student");
+            PreparedStatement stmPicture = connection.prepareStatement(
+                    "SELECT * FROM Picture WHERE student_id = ?");
+
+            while (rst.next()){
+                String id = rst.getString("id");
+                String name = rst.getString("name");
+                String address = rst.getString("address");
+                String contact = rst.getString("contact");
+                String gender = rst.getString("gender");
+                Blob picture = null;
+
+                stmPicture.setString(1, id);
+                ResultSet rstPicture = stmPicture.executeQuery();
+                if(rstPicture.next()){
+                    picture = rstPicture.getBlob("picture");
+                } else {
+                    Image image = new Image("/image/No-photo.jpg");
+                    BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    ImageIO.write(bufferedImage, "png", bos);
+
+                    byte[] bytes = bos.toByteArray();
+                    picture = new SerialBlob(bytes);
+                }
+
+                Student student = new Student(id, name, address, contact, Gender.valueOf(gender), picture);
+                tblStudent.getItems().add(student);
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Failed to load Students, try again!...").showAndWait();
+            Platform.exit();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     public void btnBrowseOnAction(ActionEvent event) {
 
     }

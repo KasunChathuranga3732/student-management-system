@@ -15,6 +15,7 @@ public class Student implements Serializable {
     private String address;
     private String contact;
     private Gender gender;
+    private Blob picture;
 
     public String getAddress() {
         return address;
@@ -40,14 +41,15 @@ public class Student implements Serializable {
         this.gender = gender;
     }
 
-    private Blob picture;
-
     public Student() {
     }
 
-    public Student(String id, String name, Blob picture) {
+    public Student(String id, String name, String address, String contact, Gender gender, Blob picture) {
         this.id = id;
         this.name = name;
+        this.address = address;
+        this.contact = contact;
+        this.gender = gender;
         this.picture = picture;
     }
 

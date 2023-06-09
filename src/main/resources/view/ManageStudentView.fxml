@@ -175,8 +175,8 @@
                             <TableColumn prefWidth="107.69245910644531" text="ID" />
                               <TableColumn prefWidth="214.61572265625" text="Name" />
                               <TableColumn prefWidth="190.0003662109375" text="Address" />
-                              <TableColumn prefWidth="103.8463134765625" text="Gender" />
-                              <TableColumn prefWidth="145.385009765625" text="Contact" />
+                              <TableColumn prefWidth="103.8463134765625" text="Contact" />
+                              <TableColumn prefWidth="145.385009765625" text="Gender" />
                           </columns>
                         </TableView>
                      </children>
