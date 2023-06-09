@@ -9,6 +9,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.FileChooser;
 import lk.ijse.dep10.app.db.DBConnection;
 import lk.ijse.dep10.app.model.Student;
 import lk.ijse.dep10.app.util.Gender;
@@ -17,7 +18,9 @@ import javax.imageio.ImageIO;
 import javax.sql.rowset.serial.SerialBlob;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.sql.*;
 
 public class ManageStudentViewController {
@@ -99,13 +102,24 @@ public class ManageStudentViewController {
     }
 
 
-    public void btnBrowseOnAction(ActionEvent event) {
-
+    public void btnBrowseOnAction(ActionEvent event) throws MalformedURLException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select the Student picture");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files",
+                "*.jpg", "*.png", "*.jpeg", "*.gif", "*.bmp"));
+        File file = fileChooser.showOpenDialog(btnBrowse.getScene().getWindow());
+        if(file != null){
+            Image image = new Image(file.toURI().toURL().toString(), 200, 200, true, true);
+            imgStudent.setImage(image);
+            btnClear.setDisable(false);
+        }
     }
 
     
     public void btnClearOnAction(ActionEvent event) {
-
+        Image image = new Image("/image/No-photo.jpg");
+        imgStudent.setImage(image);
+        btnClear.setDisable(true);
     }
 
     
