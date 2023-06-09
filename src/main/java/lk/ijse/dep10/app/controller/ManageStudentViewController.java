@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import lk.ijse.dep10.app.db.DBConnection;
@@ -124,7 +125,42 @@ public class ManageStudentViewController {
 
     
     public void btnDeleteOnAction(ActionEvent event) {
+        Student selectedStudent = tblStudent.getSelectionModel().getSelectedItem();
 
+        Connection connection = DBConnection.getInstance().getConnection();
+        try {
+            connection.setAutoCommit(false);
+            PreparedStatement stmPicture = connection.prepareStatement(
+                    "DELETE FROM Picture WHERE student_id = ?");
+            PreparedStatement stmItem = connection.prepareStatement(
+                    "DELETE FROM Student WHERE id = ?");
+
+            stmPicture.setString(1, selectedStudent.getId());
+            stmPicture.executeUpdate();
+
+            stmItem.setString(1, selectedStudent.getId());
+            stmItem.executeUpdate();
+
+            connection.commit();
+            tblStudent.getItems().remove(selectedStudent);
+            tblStudent.getSelectionModel().clearSelection();
+            if(tblStudent.getItems().isEmpty()) btnNewStudent.fire();
+
+        } catch (Throwable e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR,"Failed to delete the Student").show();
+        }finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     
@@ -160,7 +196,7 @@ public class ManageStudentViewController {
 
     
     public void tblStudentOnKeyReleased(KeyEvent event) {
-
+        if(event.getCode() == KeyCode.DELETE) btnDelete.fire();
     }
 
 }
