@@ -129,7 +129,23 @@ public class ManageStudentViewController {
 
     
     public void btnNewStudentOnAction(ActionEvent event) {
+        txtId.setText(generateId());
+        txtName.clear();
+        txtAddress.clear();
+        txtContact.clear();
+        rdoFemale.getToggleGroup().selectToggle(null);
+        txtSearchStudent.clear();
+        btnClear.fire();
+        tblStudent.getSelectionModel().clearSelection();
+        txtName.requestFocus();
+    }
 
+    private String generateId() {
+        ObservableList<Student> studentList = tblStudent.getItems();
+        if(studentList.isEmpty()) return "S-001";
+        int id = Integer.parseInt(studentList.get(studentList.size() - 1).getId().substring(2));
+        String newId = String.format("%s%03d",("S-"), (id + 1));
+        return newId;
     }
 
     
