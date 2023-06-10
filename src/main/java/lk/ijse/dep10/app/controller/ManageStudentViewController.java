@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import lk.ijse.dep10.app.db.DBConnection;
 import lk.ijse.dep10.app.model.Student;
@@ -163,9 +164,14 @@ public class ManageStudentViewController {
         }
     }
 
+    public void tblStudentOnKeyReleased(KeyEvent event) {
+        if(event.getCode() == KeyCode.DELETE) btnDelete.fire();
+    }
+
     
     public void btnNewStudentOnAction(ActionEvent event) {
         txtId.setText(generateId());
+        removeStyleClasses();
         txtName.clear();
         txtAddress.clear();
         txtContact.clear();
@@ -186,17 +192,51 @@ public class ManageStudentViewController {
 
     
     public void btnSaveOnAction(ActionEvent event) {
-
+        if(!isDataValidate()) return;
     }
 
-    
+    private boolean isDataValidate() {
+        boolean isDataValid = true;
+        removeStyleClasses();
+
+
+        if(rdoMale.getToggleGroup().getSelectedToggle()==null){
+            isDataValid = false;
+            rdoMale.requestFocus();
+            lblGender.setTextFill(Color.RED);
+        }
+
+        if(!txtContact.getText().matches("\\d{3}-\\d{7}")) {
+            txtContact.getStyleClass().add("invalid");
+            txtContact.requestFocus();
+            isDataValid = false;
+        }
+
+        if(txtAddress.getText().isBlank()){
+            isDataValid=false;
+            txtAddress.getStyleClass().add("invalid");
+            txtAddress.requestFocus();
+            txtAddress.selectAll();
+        }
+
+        if(txtName.getText().isBlank()){
+            isDataValid=false;
+            txtName.getStyleClass().add("invalid");
+            txtName.requestFocus();
+            txtName.selectAll();
+        }
+        return isDataValid;
+    }
+
+    private void removeStyleClasses() {
+        txtName.getStyleClass().remove("invalid");
+        txtAddress.getStyleClass().remove("invalid");
+        txtContact.getStyleClass().remove("invalid");
+        lblGender.setTextFill(Color.BLACK);
+    }
+
+
     public void rdoGentOnAction(ActionEvent event) {
 
     }
-
-    
-    public void tblStudentOnKeyReleased(KeyEvent event) {
-        if(event.getCode() == KeyCode.DELETE) btnDelete.fire();
-    }
-
 }
