@@ -57,6 +57,32 @@ public class ManageStudentViewController {
 
         loadAllStudents();
 
+        tblStudent.getSelectionModel().selectedItemProperty().addListener((ov, prev, current)->{
+            btnDelete.setDisable(current == null);
+
+            if (current == null) return;
+
+            txtId.setText(current.getId());
+            txtName.setText(current.getName());
+            txtAddress.setText(current.getAddress());
+            txtContact.setText(current.getContact());
+            if (current.getGender() == Gender.MALE) rdoMale.getToggleGroup().selectToggle(rdoMale);
+            if (current.getGender() == Gender.FEMALE) rdoFemale.getToggleGroup().selectToggle(rdoFemale);
+            Blob picture = current.getPicture();
+
+            if(picture != null) {
+                try {
+                    Image image = new Image(picture.getBinaryStream());
+                    imgStudent.setImage(image);
+                    btnClear.setDisable(false);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                btnClear.fire();
+            }
+        });
+
     }
 
     private void loadAllStudents() {
