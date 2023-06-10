@@ -193,6 +193,70 @@ public class ManageStudentViewController {
     
     public void btnSaveOnAction(ActionEvent event) {
         if(!isDataValidate()) return;
+
+        String id = txtId.getText();
+        String name = txtName.getText();
+        String address = txtAddress.getText();
+        String contact = txtContact.getText();
+        String gender = rdoMale.isSelected()? Gender.MALE.name():Gender.FEMALE.name();
+
+
+        Connection connection = DBConnection.getInstance().getConnection();
+        Student selectedStudent = tblStudent.getSelectionModel().getSelectedItem();
+        int selectedIndex = tblStudent.getSelectionModel().getSelectedIndex();
+
+        if(selectedStudent == null) {
+            try {
+                connection.setAutoCommit(false);
+
+                PreparedStatement stm = connection.prepareStatement(
+                        "INSERT INTO Student(id, name, address, contact, gender) VALUES (?,?,?,?,?)");
+                stm.setString(1, id);
+                stm.setString(2, name);
+                stm.setString(3, address);
+                stm.setString(4, contact);
+                stm.setString(5, gender);
+                stm.executeUpdate();
+
+                Student student = new Student(id, name, address, contact,
+                        Gender.valueOf(gender), null);
+
+                if (!btnClear.isDisable()) {
+                    PreparedStatement stm2 = connection.prepareStatement
+                            ("INSERT INTO Picture (student_id, picture) VALUES (?, ?)");
+
+                    Blob picture = convertPicture();
+                    stm2.setString(1, id);
+                    stm2.setBlob(2, picture);
+                    stm2.executeUpdate();
+                    student.setPicture(picture);
+                }else{
+                    Blob picture = convertPicture();
+                    student.setPicture(picture);
+                }
+
+                connection.commit();
+                tblStudent.getItems().add(student);
+                btnNewStudent.fire();
+
+            } catch (Throwable e) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                e.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Failed to save the student").show();
+            } finally {
+                try {
+                    connection.setAutoCommit(true);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        } else{
+
+        }
     }
 
     private boolean isDataValidate() {
@@ -233,6 +297,16 @@ public class ManageStudentViewController {
         txtAddress.getStyleClass().remove("invalid");
         txtContact.getStyleClass().remove("invalid");
         lblGender.setTextFill(Color.BLACK);
+    }
+
+    private Blob convertPicture() throws IOException, SQLException {
+        Image image = imgStudent.getImage();
+        BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ImageIO.write(bufferedImage, "png", bos);
+
+        byte[] bytes = bos.toByteArray();
+        return new SerialBlob(bytes);
     }
 
 
