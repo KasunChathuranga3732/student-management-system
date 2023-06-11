@@ -281,7 +281,72 @@ public class ManageStudentViewController {
                 }
             }
         } else{
+            try {
+                connection.setAutoCommit(false);
 
+                PreparedStatement stm = connection.prepareStatement(
+                        "UPDATE Student SET name=?, address=?, contact=?, gender=? WHERE id = ?");
+                stm.setString(1, name);
+                stm.setString(2, address);
+                stm.setString(3, contact);
+                stm.setString(4, gender);
+                stm.setString(5, id);
+                stm.executeUpdate();
+
+                Student student = new Student(id, name, address, contact,
+                        Gender.valueOf(gender), null);
+
+                Statement stmPicSelect = connection.createStatement();
+                String sql = String.format("SELECT * FROM Picture WHERE student_id = '%s'", id);
+
+                if (!btnClear.isDisable()) {
+                    PreparedStatement stm2 = connection.prepareStatement
+                            ("INSERT INTO Picture (student_id, picture) VALUES (?, ?)");
+                    PreparedStatement stm3 = connection.prepareStatement(
+                            "UPDATE Picture SET picture = ? WHERE student_id = ?");
+
+                    Blob picture = convertPicture();
+                    student.setPicture(picture);
+
+                    if(!stmPicSelect.executeQuery(sql).next()) {
+                        stm2.setString(1, id);
+                        stm2.setBlob(2, picture);
+                        stm2.executeUpdate();
+
+                    } else {
+                        stm3.setBlob(1, picture);
+                        stm3.setString(2, id);
+                        stm3.executeUpdate();
+                    }
+
+                } else if(stmPicSelect.executeQuery(sql).next()){
+                    Statement stmDeletePic = connection.createStatement();
+                    String sqlDelete = String.format("DELETE FROM Picture WHERE student_id = '%s'", id);
+                    stmDeletePic.executeUpdate(sqlDelete);
+                    Blob picture = convertPicture();
+                    student.setPicture(picture);
+
+                }
+
+                connection.commit();
+                tblStudent.getItems().set(selectedIndex, student);
+                btnNewStudent.fire();
+
+            } catch (Throwable e) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                e.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Failed to update the student").show();
+            } finally {
+                try {
+                    connection.setAutoCommit(true);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
     }
 
