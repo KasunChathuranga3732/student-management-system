@@ -54,6 +54,51 @@ public class ManageStudentViewController {
         tblStudent.getColumns().get(5).setCellValueFactory(new PropertyValueFactory<>("gender"));
 
 
+        txtSearchStudent.textProperty().addListener((ov, previous, current)->{
+            Connection connection = DBConnection.getInstance().getConnection();
+
+            try {
+                Statement stm = connection.createStatement();
+                String sql = "SELECT * FROM Student WHERE id LIKE '%1$s' OR name LIKE '%1$s' OR address LIKE '%1$s'";
+                PreparedStatement stmPicture = connection.prepareStatement(
+                        "SELECT * FROM Picture WHERE student_id = ?");
+                sql = String.format(sql,"%"+current+"%");
+                ResultSet rst = stm.executeQuery(sql);
+
+                ObservableList<Student> studentList = tblStudent.getItems();
+                studentList.clear();
+
+                while(rst.next()){
+                    String id = rst.getString("id");
+                    String name = rst.getString("name");
+                    String address = rst.getString("address");
+                    String contact = rst.getString("contact");
+                    String gender = rst.getString("gender");
+                    Blob picture = null;
+
+                    stmPicture.setString(1, id);
+                    ResultSet rstPicture = stmPicture.executeQuery();
+                    if(rstPicture.next()){
+                        picture = rstPicture.getBlob("picture");
+                    } else {
+                        btnClear.fire();
+                        picture = convertPicture();
+                    }
+
+
+                    studentList.add(new Student(id, name, address, contact,
+                            Gender.valueOf(gender), picture));
+
+                }
+
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
 
         loadAllStudents();
 
